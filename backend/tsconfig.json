@@ -1,0 +1,16 @@
+{
+  // Visit https://aka.ms/tsconfig to read more about this file
+  "compilerOptions": {
+    "target": "ES2020",                         /* Sets the JS version for modern Node.js */
+    "module": "commonjs",                       /* Standard module system for Node/Express */
+    "rootDir": "./src",                         /* Where your TypeScript code lives */
+    "outDir": "./dist",                         /* Where the compiled JavaScript goes */
+    "esModuleInterop": true,                    /* Fixes import compatibility */
+    "forceConsistentCasingInFileNames": true,   /* Important for Mac/Linux compatibility */
+    "strict": true,                             /* Enables all strict type-checking options */
+    "skipLibCheck": true,                       /* Speeds up compilation */
+    "noUncheckedIndexedAccess": true,           /* Keeps your data access safe */
+  },
+  "include": ["src/**/*"],                      /* Tells TS to only look at files in src */
+  "exclude": ["node_modules"]                   /* Don't try to compile the libraries */
+}

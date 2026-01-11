@@ -17,6 +17,20 @@ Full-stack application to track Manga, Anime, and Light/Web Novels.
 * PostgreSQL
 * Postgres.app (for Mac users)
 
+## Project Structure
+
+```text
+media-tracker-system/
+├── backend/
+│   ├── src/
+│   │   ├── index.ts   # Entry point & API routes
+│   │   └── db.ts      # Database connection & pooling
+│   ├── .env           # Environment variables (Local only)
+│   └── package.json   # Backend dependencies
+├── README.md          # Project documentation
+└── .gitignore         # Safety filter for GitHub
+```
+
 ### Setup
 1. **Install dependencies:** `npm install`
 2. **Environment Variables:** Create a `.env` file in the backend folder and add:

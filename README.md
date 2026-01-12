@@ -12,11 +12,6 @@ Full-stack application to track Manga, Anime, and Light/Web Novels.
 - **Frontend:** React, Tailwind CSS
 - **Extension:** JavaScript (Manifest v3)
 
-### Prerequisites
-* Node.js (v18+)
-* PostgreSQL
-* Postgres.app (for Mac users)
-
 ## Project Structure
 
 ```text
@@ -30,6 +25,19 @@ media-tracker-system/
 ├── README.md          # Project documentation
 └── .gitignore         # Safety filter for GitHub
 ```
+
+## Data Model
+
+The `media_items` table stores the core data for the tracker:
+* **Identification:** `id` (Primary Key, Serial)
+* **Metadata:** `title`, `type` (Anime/Manga/Movie), `total_episodes`
+* **User Progress:** `status`, `current_progress`, `rating` (1-10)
+* **Timestamps:** `created_at`
+
+### Prerequisites
+* Node.js (v18+)
+* PostgreSQL
+* Postgres.app (for Mac users)
 
 ### Setup
 1. **Install dependencies:** `npm install`

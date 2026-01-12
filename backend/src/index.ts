@@ -47,6 +47,20 @@ app.get('/media', async (req: Request, res: Response) => {
   }
 });
 
+app.get('/hello/:name', async (req: Request, res: Response) => {
+  try {
+    const name = req.params.name;
+    res.json({
+      status: "success",
+      message: `Hello, ${name}!`
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ status: "error", message: "Internal Server Error" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });

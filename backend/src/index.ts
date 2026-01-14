@@ -61,6 +61,26 @@ app.get('/hello/:name', async (req: Request, res: Response) => {
   }
 });
 
+app.post('/media', async (req: Request, res: Response) => {
+  try{
+    const { title, media_type, tracking_status, current_progress } = req.body;
+
+    const sql = `
+      INSERT INTO media_items (title, media_type, tracking_status, current_progress)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;
+    `;
+
+    const result = await pool.query(sql, [title, media_type, tracking_status, current_progress]);
+    
+    res.status(201).json(result.rows[0]);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ status: "error", message: "Internal Server Error" });
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });

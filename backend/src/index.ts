@@ -12,6 +12,9 @@ const PORT = process.env.PORT || 5001;
 app.use(cors()); // Allows your extension/frontend to talk to the server
 app.use(express.json()); // Allows the server to read JSON data
 
+
+// GET (Read) Routes
+
 // First "Route"
 app.get('/ping', (req: Request, res: Response) => {
   res.json({ status: "success", message: "Media Tracker API is online!" });
@@ -61,6 +64,8 @@ app.get('/hello/:name', async (req: Request, res: Response) => {
   }
 });
 
+// POST (Create) routes
+
 app.post('/media', async (req: Request, res: Response) => {
   try{
     const { title, media_type, tracking_status, current_progress } = req.body;
@@ -80,6 +85,8 @@ app.post('/media', async (req: Request, res: Response) => {
     res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 })
+
+// DELETE routes
 
 app.delete('/media/:id', async (req: Request, res: Response) => {
   try {
@@ -103,6 +110,34 @@ app.delete('/media/:id', async (req: Request, res: Response) => {
     res.status(500).json({ status: "error", message: "Internal Server Error"})
   }
 });
+
+// PUT (Update) Routes
+
+app.put('/media/:id', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const { current_progress, tracking_status } = req.body;
+
+    const sql = `
+      UPDATE media_items 
+      SET current_progress = $1, tracking_status = $2 
+      WHERE id = $3 
+      RETURNING *;
+    `;
+
+    const result = await pool.query(sql, [current_progress, tracking_status, id]);
+
+    if (result.rowCount === 0) {
+      res.status(404).json({ status: "error", message: "Not Found"});
+    } else {
+      res.status(200).json(result.rows[0]);
+    }
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ status: "error", message: "Internal Server Error"})
+  }
+})
 
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);

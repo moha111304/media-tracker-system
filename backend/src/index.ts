@@ -81,6 +81,29 @@ app.post('/media', async (req: Request, res: Response) => {
   }
 })
 
+app.delete('/media/:id', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+
+    const sql = `
+      DELETE FROM media_items WHERE id = $1
+      RETURNING *
+    `;
+
+    const result = await pool.query(sql, [id]);
+
+    if (result.rowCount === 0) {
+      res.status(404).json({ status: "error", message: "Not Found"});
+    } else {
+      res.status(200).json(result.rows[0]);
+    }
+
+  } catch (err){
+    console.error(err);
+    res.status(500).json({ status: "error", message: "Internal Server Error"})
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });

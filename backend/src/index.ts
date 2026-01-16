@@ -48,16 +48,40 @@ app.get('/test-db', async (req: Request, res: Response) => {
 // Route to get all media items from the database
 app.get('/media', async (req: Request, res: Response) => {
   try {
-    // We use the pool to send a raw SQL query
-    const result = await pool.query('SELECT * FROM media_items ORDER BY created_at DESC');
+    const { media_type, tracking_status } = req.query;
     
-    // result.rows is an array of objects representing your database rows
+    let sql = 'SELECT * FROM media_items';
+    const conditions = []; // To store strings like "media_type = $1"
+    const params = [];     // To store the actual values
+
+    // 1. Build the conditions dynamically
+    if (media_type) {
+      params.push(media_type);
+      conditions.push(`media_type = $${params.length}`);
+    }
+
+    if (tracking_status) {
+      params.push(tracking_status);
+      conditions.push(`tracking_status = $${params.length}`);
+    }
+
+    // 2. If we have conditions, join them with 'WHERE' and 'AND'
+    if (conditions.length > 0) {
+      sql += ' WHERE ' + conditions.join(' AND ');
+    }
+
+    sql += ' ORDER BY created_at DESC';
+
+    const result = await pool.query(sql, params);
+    // result.rows is an array of objects representing database rows
     res.json(result.rows); 
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch media items" });
   }
 });
+
+app.get
 
 app.get('/hello/:name', async (req: Request, res: Response) => {
   try {
@@ -86,13 +110,13 @@ app.post('/media', async (req: Request, res: Response) => {
 
     if (!media_type || !ALLOWED_MEDIA_TYPES.includes(media_type)) {
       return res.status(400).json({ 
-        error: `Invalid media type. Must be one of: ${ALLOWED_MEDIA_TYPES.join(', ')}` 
+        error: `Invalid or missing media type. Must be one of: ${ALLOWED_MEDIA_TYPES.join(', ')}` 
       });
     }
 
     if (!tracking_status || !ALLOWED_STATUSES.includes(tracking_status)) {
       return res.status(400).json({ 
-        error: `Invalid status. Must be one of: ${ALLOWED_STATUSES.join(', ')}` 
+        error: `Invalid or missing status. Must be one of: ${ALLOWED_STATUSES.join(', ')}` 
       });
     }
 
@@ -152,7 +176,7 @@ app.put('/media/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
     const { tracking_status, current_progress,  } = req.body;
     
-    
+    // Validation For Updates
     if (tracking_status && !ALLOWED_STATUSES.includes(tracking_status)) {
       return res.status(400).json({ 
         error: `Invalid status. Must be one of: ${ALLOWED_STATUSES.join(', ')}` 

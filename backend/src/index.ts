@@ -8,6 +8,15 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+const ALLOWED_MEDIA_TYPES = [
+  'Anime', 'Donghua', 'Manga', 'Manhwa', 'Manhua', 'Light Novel', 'Web Novel',
+   'Book', 'Novel', 'Movie', 'Tv Show'
+  ];
+
+const ALLOWED_STATUSES = [
+  'Plan to Watch', 'Watching', 'Plan to Read', 'Reading', 'Completed', 'Dropped', 'On Hold'
+];
+
 // Middleware (Like Java Filters)
 app.use(cors()); // Allows your extension/frontend to talk to the server
 app.use(express.json()); // Allows the server to read JSON data
@@ -68,15 +77,40 @@ app.get('/hello/:name', async (req: Request, res: Response) => {
 
 app.post('/media', async (req: Request, res: Response) => {
   try{
-    const { title, media_type, tracking_status, current_progress } = req.body;
+    const { title, media_type, tracking_status, current_progress, rating } = req.body;
+
+    // Validation For Inputs
+    if (!title || title.trim() === "") {
+      return res.status(400).json({ error: "Title is required" });
+    }
+
+    if (!media_type || !ALLOWED_MEDIA_TYPES.includes(media_type)) {
+      return res.status(400).json({ 
+        error: `Invalid media type. Must be one of: ${ALLOWED_MEDIA_TYPES.join(', ')}` 
+      });
+    }
+
+    if (!tracking_status || !ALLOWED_STATUSES.includes(tracking_status)) {
+      return res.status(400).json({ 
+        error: `Invalid status. Must be one of: ${ALLOWED_STATUSES.join(', ')}` 
+      });
+    }
+
+    if (current_progress < 0) {
+      return res.status(400).json({ error: "Progress cannot be negative" });
+    }
+
+    if (rating !== undefined && (rating < 0 || rating > 10)) {
+      return res.status(400).json({ error: "Rating must be between 0 and 10" });
+    }
 
     const sql = `
-      INSERT INTO media_items (title, media_type, tracking_status, current_progress)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO media_items (title, media_type, tracking_status, current_progress, rating)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `;
 
-    const result = await pool.query(sql, [title, media_type, tracking_status, current_progress]);
+    const result = await pool.query(sql, [title, media_type, tracking_status, current_progress, rating]);
     
     res.status(201).json(result.rows[0]);
 
@@ -116,16 +150,27 @@ app.delete('/media/:id', async (req: Request, res: Response) => {
 app.put('/media/:id', async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const { current_progress, tracking_status } = req.body;
+    const { tracking_status, current_progress,  } = req.body;
+    
+    
+    if (tracking_status && !ALLOWED_STATUSES.includes(tracking_status)) {
+      return res.status(400).json({ 
+        error: `Invalid status. Must be one of: ${ALLOWED_STATUSES.join(', ')}` 
+      });
+    }
+
+    if (current_progress < 0) {
+      return res.status(400).json({ error: "Progress cannot be negative" });
+    }
 
     const sql = `
       UPDATE media_items 
-      SET current_progress = $1, tracking_status = $2 
+      SET tracking_status = $1, current_progress = $2
       WHERE id = $3 
       RETURNING *;
     `;
 
-    const result = await pool.query(sql, [current_progress, tracking_status, id]);
+    const result = await pool.query(sql, [tracking_status, current_progress, id]);
 
     if (result.rowCount === 0) {
       res.status(404).json({ status: "error", message: "Not Found"});

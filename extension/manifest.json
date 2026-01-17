@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Media Tracker",
+  "version": "1.0",
+  "description": "Track my anime, manga, and more.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "permissions": ["activeTab"],
+  "host_permissions": [
+    "http://localhost:5001/*"
+  ]
+}

@@ -1,27 +1,34 @@
 # Media Tracker System
 Full-stack application to track Manga, Anime, and Light/Web Novels.
 
-## Key Milestones
-* **Backend Foundation:** Built a high-performance Express.js server using TypeScript for strict type-checking.
-* **Database Design:** Architected a relational schema in PostgreSQL to manage media metadata and user progress.
-* **Data Persistence:** Implemented a persistent "Bridge" using connection pooling for efficient database queries.
-* **RESTful API:** Developed initial endpoints to fetch and synchronize media data between the server and the database.
+## Recent Milestones
+* **Defensive Backend:** Implemented strict server-side validation and "Fail-Fast" logic to ensure database integrity.
+* **Dynamic Query Engine:** Developed an intelligent GET route that builds SQL queries on the fly for advanced filtering (e.g., searching by type or status).
+* **Browser Integration:** Launched a Manifest V3 Chrome Extension that bridges the PostgreSQL database directly into the browser UI via asynchronous fetch logic.
+* **Database Scaling:** Seeded the system with professional-grade test data to ensure UI responsiveness.
 
 ## Tech Stack
-- **Backend:** Node.js, Express, TypeScript, PostgreSQL
-- **Frontend:** React, Tailwind CSS
-- **Extension:** JavaScript (Manifest v3)
+- **Backend:** Node.js, Express, TypeScript (Strict Mode)
+- **Database:** PostgreSQL (with connection pooling)
+- **Frontend:** Chrome Extension (Vanilla JS, CSS3, HTML5)
+- **Tools:** DBeaver (Database management), Git (Version control)
 
 ## Project Structure
 
 ```text
 media-tracker-system/
 ├── backend/
+|   ├── database
+│   │   └── schema.sql # Core Data Model
 │   ├── src/
 │   │   ├── index.ts   # Entry point & API routes
 │   │   └── db.ts      # Database connection & pooling
 │   ├── .env           # Environment variables (Local only)
 │   └── package.json   # Backend dependencies
+├── extension/         # Chrome Extension Files
+│   ├── manifest.json  # Extension metadata & permissions
+│   ├── popup.html     # Extension UI
+│   └── popup.js       # API Fetching & DOM Rendering
 ├── README.md          # Project documentation
 └── .gitignore         # Safety filter for GitHub
 ```
@@ -30,8 +37,8 @@ media-tracker-system/
 
 The `media_items` table stores the core data for the tracker:
 * **Identification:** `id` (Primary Key, Serial)
-* **Metadata:** `title`, `type` (Anime/Manga/Movie), `total_episodes`
-* **User Progress:** `status`, `current_progress`, `rating` (1-10)
+* **Metadata:** `title`, `media_type` (Anime/Manga/Movie/etc...), `total_episodes`
+* **User Progress:** `tracking_status`, `current_progress`, `rating` (1-10)
 * **Timestamps:** `created_at`
 
 ### Prerequisites

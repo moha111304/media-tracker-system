@@ -70,7 +70,7 @@ app.get('/media', async (req: Request, res: Response) => {
       sql += ' WHERE ' + conditions.join(' AND ');
     }
 
-    sql += ' ORDER BY created_at DESC';
+    sql += ' ORDER BY created_at DESC, id ASC';
 
     const result = await pool.query(sql, params);
     // result.rows is an array of objects representing database rows
@@ -80,8 +80,6 @@ app.get('/media', async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to fetch media items" });
   }
 });
-
-app.get
 
 app.get('/hello/:name', async (req: Request, res: Response) => {
   try {

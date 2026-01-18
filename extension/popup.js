@@ -18,14 +18,57 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.length > 0) {
                 data.forEach(item => {
                     const div = document.createElement('div');
+                    const childSpan = document.createElement('span');
+                    const updateButton = document.createElement('button');
+
                     // class for styling
                     div.className = 'item-row'; 
-                    div.textContent = `${item.title} - ${item.tracking_status}`
+
+                    childSpan.textContent = `${item.title} - ${item.tracking_status}`
+
+                    updateButton.textContent = '+1';
+    
+                    // Event Listener, while we have access to 'item'
+                    updateButton.addEventListener('click', () => {
+                        updateButton.disabled = true; // Stop double-clicking
+                        updateProgress(item.id, item.current_progress, item.tracking_status);
+                    });
+
+                    // Append children to the div
+                    div.appendChild(childSpan);
+                    div.appendChild(updateButton);
+
                     media_list.appendChild(div);
                 });
             } else {
-                media_list.style.display = 'No items found.';
+                media_list.textContent = 'No items found.';
             }
+
+        } catch (err) {
+            console.error('Fetch Error:', err);
+        }
+    }
+
+    async function updateProgress(id, current_progress, tracking_status) {
+        try {
+             const response = await fetch(`${url}/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ current_progress: current_progress + 1, 
+                        tracking_status: tracking_status })
+             });
+             
+        const result = await response.json();
+
+        if (response.ok) {
+            console.log('Successfully updated:', result);
+            popup();  
+        } else {
+            alert(`Update Failed: ${result.error || 'Unknown Error'}`);
+            popup();  
+        }
 
         } catch (err) {
             console.error('Fetch Error:', err);

@@ -7,6 +7,12 @@ Full-stack application to track Manga, Anime, and Light/Web Novels.
 * **Browser Integration:** Launched a Manifest V3 Chrome Extension that bridges the PostgreSQL database directly into the browser UI via asynchronous fetch logic.
 * **Database Scaling:** Seeded the system with professional-grade test data to ensure UI responsiveness.
 
+## Roadmap
+- [ ] **Week 2, Day 4:** Implement a "Search & Filter" bar within the Chrome Extension.
+- [ ] **Week 2, Day 5:** Add "Delete" functionality with a confirmation modal.
+- [ ] **Future:** User Authentication (BCrypt/JWT) to allow multiple users.
+- [ ] **Future:** Syncing with external APIs (MyAnimeList/AniList) to auto-fill metadata.
+
 ## Tech Stack
 - **Backend:** Node.js, Express, TypeScript (Strict Mode)
 - **Database:** PostgreSQL (with connection pooling)

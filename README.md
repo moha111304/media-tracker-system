@@ -13,6 +13,20 @@ Full-stack application to track Manga, Anime, and Light/Web Novels.
 - [ ] **Future:** User Authentication (BCrypt/JWT) to allow multiple users.
 - [ ] **Future:** Syncing with external APIs (MyAnimeList/AniList) to auto-fill metadata.
 
+## Search & Filtering Review
+The system implements a **Live Search** feature using a "Debounced" frontend and a dynamic SQL backend.
+
+### Frontend: The Debounce
+To prevent overwhelming the PostgreSQL database with a request for every keystroke, I implemented a **300ms debounce**. This ensures that the `popup()` function only fires after the user has stopped typing.
+
+### Backend: Dynamic SQL Construction
+The `GET /media` endpoint builds its query string based on provided parameters. For the search feature, I used the **`ILIKE`** operator combined with **SQL Wildcards (`%`)**:
+- **ILIKE:** Allows for case-insensitive matching (e.g., "vin" matches "Vinland").
+- **% Wildcard:** Wraps the search term (e.g., `%title%`) to find the keyword anywhere within the string.
+
+### URL Persistence
+Using `URLSearchParams`, the extension handles spaces and special characters automatically through percent-encoding, ensuring that statuses like "Plan To Watch" are transmitted safely to the Express server.
+
 ## Tech Stack
 - **Backend:** Node.js, Express, TypeScript (Strict Mode)
 - **Database:** PostgreSQL (with connection pooling)

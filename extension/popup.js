@@ -1,11 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     const url = 'http://localhost:5001/media'
-    const media_list = document.getElementById('media-list');
+    const media_list = document.getElementById('media-list'); 
 
     // Function to show popups of data
     async function popup() {
         try {
-            const response = await fetch(url);
+            // Get the CURRENT values from the UI
+            const searchVal = document.getElementById('search-input')?.value ?? '';
+            const statusVal = document.getElementById('status-filter')?.value ?? '';
+            
+            // Build the params based on those current values
+            const params = new URLSearchParams();
+            if (searchVal) params.append('title', searchVal);
+            if (statusVal) params.append('tracking_status', statusVal);
+            
+            const queryString = params.toString();
+            const finalUrl = queryString ? `${url}?${queryString}` : url;
+
+            const response = await fetch(finalUrl);
             if (!response.ok) {
                 throw new Error(`Response status: ${response.status}`);
             }
@@ -74,6 +86,20 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Fetch Error:', err);
         }
     }
+
+    // For the dropdown
+    document.getElementById('status-filter').addEventListener('change', popup);
+
+    let searchTimeout;
+    // For the search box
+    document.getElementById('search-input').addEventListener('input', () => {
+        console.log("Typing detected..."); // Check if event fires
+        clearTimeout(searchTimeout); 
+        searchTimeout = setTimeout(() => {
+            console.log("Timeout finished, calling popup()"); // Check if debounce works
+            popup();
+        }, 300);
+    });
 
     popup();
 });

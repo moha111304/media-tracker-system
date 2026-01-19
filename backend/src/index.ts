@@ -14,7 +14,7 @@ const ALLOWED_MEDIA_TYPES = [
   ];
 
 const ALLOWED_STATUSES = [
-  'Plan to Watch', 'Watching', 'Plan to Read', 'Reading', 'Completed', 'Dropped', 'On Hold'
+  'Plan To Watch', 'Watching', 'Plan To Read', 'Reading', 'Completed', 'Dropped', 'On Hold', 'Hiatus'
 ];
 
 // Middleware (Like Java Filters)
@@ -48,7 +48,7 @@ app.get('/test-db', async (req: Request, res: Response) => {
 // Route to get all media items from the database
 app.get('/media', async (req: Request, res: Response) => {
   try {
-    const { media_type, tracking_status } = req.query;
+    const { media_type, tracking_status, title } = req.query;
     
     let sql = 'SELECT * FROM media_items';
     const conditions = []; // To store strings like "media_type = $1"
@@ -63,6 +63,12 @@ app.get('/media', async (req: Request, res: Response) => {
     if (tracking_status) {
       params.push(tracking_status);
       conditions.push(`tracking_status = $${params.length}`);
+    }
+
+    if (title) {
+      params.push(`%${title}%`); // The % wildcards allow partial matches
+      // Use ILIKE for case-insensitive partial searching
+      conditions.push(`title ILIKE $${params.length}`);
     }
 
     // 2. If we have conditions, join them with 'WHERE' and 'AND'

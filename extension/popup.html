@@ -21,10 +21,42 @@
     display: flex;
     justify-content: space-between;
     }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    #search-input {
+      flex: 2; /* Makes search box wider */
+      padding: 5px;
+    }
+
+    #status-filter {
+      flex: 1; /* Makes dropdown narrower */
+    }
   </style>
 </head>
 <body>
   <h2>My Media Tracker</h2>
+
+  <div class="controls">
+    <input type="text" id="search-input" placeholder="Search by title...">
+
+    <select id="status-filter" name="stasus-filter">
+      <option value="">All Statuses</option>
+      <option value="Plan To Watch">Plan To Watch</option>
+      <option value="Watching">Watching</option>
+      <option value="Plan To Read">Plan To Read</option>
+      <option value="Reading">Reading</option>
+      <option value="Completed">Completed</option>
+      <option value="Dropped">Dropped</option>
+      <option value="On Hold">On Hold</option>
+      <option value="Hiatus">Hiatus</option>
+    </select>
+  </div>
+
   <div id="media-list">Loading items...</div>
   <script src="popup.js"></script>
 </body>

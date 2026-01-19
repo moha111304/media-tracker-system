@@ -1,37 +1,24 @@
 # Media Tracker System
-Full-stack application to track Manga, Anime, and Light/Web Novels.
+A full-stack tracking application for Anime, Manga, and Novels, featuring a custom Chrome Extension interface and a robust TypeScript/PostgreSQL backend.
 
-## Recent Milestones
-* **Defensive Backend:** Implemented strict server-side validation and "Fail-Fast" logic to ensure database integrity.
-* **Dynamic Query Engine:** Developed an intelligent GET route that builds SQL queries on the fly for advanced filtering (e.g., searching by type or status).
-* **Browser Integration:** Launched a Manifest V3 Chrome Extension that bridges the PostgreSQL database directly into the browser UI via asynchronous fetch logic.
-* **Database Scaling:** Seeded the system with professional-grade test data to ensure UI responsiveness.
+## Features
+- **Full CRUD Support:** Add, view, update progress, and delete media items directly from your browser.
+- **Live Search:** Case-insensitive title search powered by SQL `ILIKE`.
+- **Intelligent Filtering:** Filter by media type or tracking status with dynamic query building.
+- **Performance Optimized:** Frontend debouncing (300ms) to reduce server load and SQL connection pooling for efficient data persistence.
+- **Safety First:** Server-side validation and frontend confirmation modals for destructive actions.
+
+## 🛠 Tech Stack
+- **Backend:** Node.js, Express, TypeScript (Strict Mode)
+- **Database:** PostgreSQL (Relation schema with check constraints)
+- **Frontend:** Chrome Extension (Manifest V3, Vanilla JS, CSS3)
+- **Tools:** DBeaver, Thunder Client, Gitss.
 
 ## Roadmap
-- [ ] **Week 2, Day 4:** Implement a "Search & Filter" bar within the Chrome Extension.
-- [ ] **Week 2, Day 5:** Add "Delete" functionality with a confirmation modal.
-- [ ] **Future:** User Authentication (BCrypt/JWT) to allow multiple users.
-- [ ] **Future:** Syncing with external APIs (MyAnimeList/AniList) to auto-fill metadata.
-
-## Search & Filtering Review
-The system implements a **Live Search** feature using a "Debounced" frontend and a dynamic SQL backend.
-
-### Frontend: The Debounce
-To prevent overwhelming the PostgreSQL database with a request for every keystroke, I implemented a **300ms debounce**. This ensures that the `popup()` function only fires after the user has stopped typing.
-
-### Backend: Dynamic SQL Construction
-The `GET /media` endpoint builds its query string based on provided parameters. For the search feature, I used the **`ILIKE`** operator combined with **SQL Wildcards (`%`)**:
-- **ILIKE:** Allows for case-insensitive matching (e.g., "vin" matches "Vinland").
-- **% Wildcard:** Wraps the search term (e.g., `%title%`) to find the keyword anywhere within the string.
-
-### URL Persistence
-Using `URLSearchParams`, the extension handles spaces and special characters automatically through percent-encoding, ensuring that statuses like "Plan To Watch" are transmitted safely to the Express server.
-
-## Tech Stack
-- **Backend:** Node.js, Express, TypeScript (Strict Mode)
-- **Database:** PostgreSQL (with connection pooling)
-- **Frontend:** Chrome Extension (Vanilla JS, CSS3, HTML5)
-- **Tools:** DBeaver (Database management), Git (Version control)
+- [X] **Week 2, Day 4:** Implement a "Search & Filter" bar within the Chrome Extension.
+- [X] **Week 2, Day 5:** Add "Delete" functionality with a confirmation modal.
+- [X] **Future:** User Authentication (BCrypt/JWT) to allow multiple users.
+- [X] **Future:** Syncing with external APIs (MyAnimeList/AniList) to auto-fill metadata.
 
 ## Project Structure
 

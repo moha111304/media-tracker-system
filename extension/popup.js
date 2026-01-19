@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const url = 'http://localhost:5001/media'
     const media_list = document.getElementById('media-list'); 
 
+
     // Function to show popups of data
     async function popup() {
         try {
@@ -30,15 +31,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.length > 0) {
                 data.forEach(item => {
                     const div = document.createElement('div');
+                    const buttonDiv = document.createElement('div');
                     const childSpan = document.createElement('span');
                     const updateButton = document.createElement('button');
+                    const deleteButton = document.createElement('button');
 
                     // class for styling
                     div.className = 'item-row'; 
+                    buttonDiv.className = 'button-half';
 
                     childSpan.textContent = `${item.title} - ${item.tracking_status}`
 
                     updateButton.textContent = '+1';
+                    deleteButton.innerHTML = '\u{1F5D1}';
     
                     // Event Listener, while we have access to 'item'
                     updateButton.addEventListener('click', () => {
@@ -46,9 +51,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         updateProgress(item.id, item.current_progress, item.tracking_status);
                     });
 
+                    deleteButton.addEventListener("click", function() {
+                        // Deletion logic here
+                        if (window.confirm("Do you want to delete this media item?")) {
+                            deleteButton.disabled = true; // Stop double-clicking
+                            deleteMedia(item.id);
+                        }
+                    });
+
                     // Append children to the div
+                    buttonDiv.appendChild(updateButton);
+                    buttonDiv.appendChild(deleteButton);
                     div.appendChild(childSpan);
-                    div.appendChild(updateButton);
+                    div.appendChild(buttonDiv);
 
                     media_list.appendChild(div);
                 });
@@ -79,6 +94,31 @@ document.addEventListener('DOMContentLoaded', () => {
             popup();  
         } else {
             alert(`Update Failed: ${result.error || 'Unknown Error'}`);
+            popup();  
+        }
+
+        } catch (err) {
+            console.error('Fetch Error:', err);
+        }
+    }
+
+    // Edit
+    async function deleteMedia(id) {
+        try {
+             const response = await fetch(`${url}/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+             });
+             
+        const result = await response.json();
+
+        if (response.ok) {
+            console.log('Successfully deleted', result);
+            popup();  
+        } else {
+            alert(`Deletion Failed: ${result.error || 'Unknown Error'}`);
             popup();  
         }
 

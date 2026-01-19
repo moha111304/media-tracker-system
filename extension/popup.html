@@ -22,6 +22,25 @@
     justify-content: space-between;
     }
 
+    .button-half {
+      display: flex;
+      gap: 5px; /* Adds space between +1 and Trash */
+      align-items: center;
+    }
+    
+    button {
+      cursor: pointer;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      padding: 2px 6px;
+    }
+
+    /* Optional: Make the trash can red on hover */
+    button:last-child:hover {
+      background-color: #fee2e2;
+      border-color: #ef4444;
+    }
+
     .controls {
       display: flex;
       gap: 10px;

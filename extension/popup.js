@@ -23,7 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(`Response status: ${response.status}`);
             }
 
+            const statsBar = document.getElementById('stats-bar');
             const data = await response.json();
+
+            statsBar.textContent = `You have ${data.length} items found.`;
 
             // Clearing the "Loading..." text first
             media_list.innerHTML = '';

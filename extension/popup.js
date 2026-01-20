@@ -144,5 +144,49 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300);
     });
 
+    const addBtn = document.getElementById('add-new-btn');
+    const addForm = document.getElementById('add-media-form');
+    const cancelBtn = document.getElementById('cancel-btn');
+
+    // Toggle the Modal Overlay
+    addBtn.addEventListener('click', () => {
+        document.getElementById('modal-overlay').style.display = 'flex'; 
+        document.getElementById('new-title').focus();
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        document.getElementById('modal-overlay').style.display = 'none';
+    });
+
+    addForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const newItem = {
+            title: document.getElementById('new-title').value,
+            media_type: document.getElementById('new-type').value,
+            tracking_status: document.getElementById('new-status').value,
+            current_progress: parseInt(document.getElementById('new-progress').value) || 0,
+            total_episodes: parseInt(document.getElementById('new-total').value) || 0,
+            rating: parseInt(document.getElementById('new-rating').value) || 0
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newItem)
+            });
+
+            if (response.ok) {
+                addForm.reset();         // Clear the form
+                document.getElementById('modal-overlay').style.display = 'none';
+                addBtn.style.display = 'block';
+                popup();                 // Refresh the list to see the new item!
+            }
+        } catch (err) {
+            console.error("Error adding item:", err);
+        }
+    });
+
     popup();
 });

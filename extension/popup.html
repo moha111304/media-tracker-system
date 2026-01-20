@@ -55,10 +55,134 @@
     #status-filter {
       flex: 1; /* Makes dropdown narrower */
     }
+
+    #add-new-btn {
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    #modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none; /* JS will change this to 'flex' */
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    #add-media-form {
+      background: white;
+      width: 85%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 20px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column; /* Everything in a neat vertical line */
+      gap: 12px; /* Uniform gap between all elements */
+    }
+
+    #add-media-form h3 { margin: 0 0 5px 0; }
+
+    /* Styling labels and inputs for consistency */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #444;
+    }
+
+    #add-media-form input, 
+    #add-media-form select {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    #save-btn { background: #4CAF50; color: white; border: none; flex: 2; padding: 10px; }
+    #cancel-btn { background: #eee; flex: 1; padding: 10px; }
   </style>
 </head>
 <body>
   <h2>My Media Tracker</h2>
+
+  <button id="add-new-btn">+ Add New</button>
+
+  <div id="modal-overlay">
+    <form id="add-media-form">
+      <h3>Add New Media</h3>
+
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="new-title" placeholder="e.g. Solo Leveling" required>
+      </div>
+
+      <div class="form-group">
+        <label>Type</label>
+        <select id="new-type" required>
+          <option value="Anime">Anime</option>
+          <option value="Donghua">Dongua</option>
+          <option value="Manga">Manga</option>
+          <option value="Manhwa">Manhwa</option>
+          <option value="Manhua">Manhua</option>
+          <option value="Light Novel">Light Novel</option>
+          <option value="Web Novel">Web Novel</option>
+          <option value="Book">Book</option>
+          <option value="Novel">Novel</option>
+          <option value="Movie">Movie</option>
+          <option value="Tv Show">Tv Show</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Status</label>
+        <select id="new-status" required>
+          <option value="Plan To Watch">Plan To Watch</option>
+          <option value="Watching">Watching</option>
+          <option value="Plan To Read">Plan To Read</option>
+          <option value="Reading">Reading</option>
+          <option value="Completed">Completed</option>
+          <option value="Dropped">Dropped</option>
+          <option value="On Hold">On Hold</option>
+          <option value="Hiatus">Hiatus</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Progress</label>
+        <input type="number" id="new-progress" value="0">
+      </div>
+
+      <div class="form-group">
+        <label>Total</label>
+        <input type="number" id="new-total" value="0">
+      </div>
+
+      <div class="form-group">
+        <label>Rating (0-10)</label>
+        <input type="number" id="new-rating" value="0" max="10">
+      </div>
+
+      <div class="form-actions" style="margin-top: 10px; display: flex; gap: 10px;">
+        <button type="submit" id="save-btn" style="flex: 2; background: #67ac5b; color: white; border: none; padding: 10px; font-weight: bold;">Save Item</button>
+        <button type="button" id="cancel-btn" style="flex: 1; padding: 10px;">Cancel</button>
+      </div>
+    </form>
+  </div>
 
   <div class="controls">
     <input type="text" id="search-input" placeholder="Search by title...">

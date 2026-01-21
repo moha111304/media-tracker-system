@@ -3,23 +3,30 @@
 <head>
   <style>
     body { 
-    width: 350px; 
-    max-height: 500px; /* Prevents the popup from being too tall */
-    overflow-y: auto;  /* Adds a scrollbar if the list is long */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    padding: 15px;
-    background-color: #f9f9f9;
+      width: 350px; 
+      max-height: 500px; /* Prevents the popup from being too tall */
+      overflow-y: auto;  /* Adds a scrollbar if the list is long */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      padding: 15px;
+      background-color: #f9f9f9;
     }
 
     .item-row { 
-    background: white;
-    border: 1px solid #eee;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    display: flex;
-    justify-content: space-between;
+      background: white;
+      border: 1px solid #eee;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .item-row:hover {
+      border-color: #67ac5b;
+      background-color: #f0fdf4;
+      transform: translateY(-1px);
+      transition: all 0.2s ease;
     }
 
     .button-half {

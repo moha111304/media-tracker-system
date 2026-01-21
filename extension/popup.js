@@ -2,6 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const url = 'http://localhost:5001/media'
     const media_list = document.getElementById('media-list'); 
 
+    chrome.storage.local.get(['lastSearch', 'lastStatus'], (result) => {
+        if (result.lastSearch) document.getElementById('search-input').value = result.lastSearch;
+        if (result.lastStatus) document.getElementById('status-filter').value = result.lastStatus;
+        
+        popup();
+    });
+
 
     // Function to show popups of data
     async function popup() {
@@ -51,7 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Event Listener, while we have access to 'item'
                     updateButton.addEventListener('click', () => {
                         updateButton.disabled = true; // Stop double-clicking
-                        updateProgress(item.id, item.current_progress, item.tracking_status);
+                        updateProgress(item.id, item.current_progress, 
+                            item.tracking_status, item.total_episodes);
                     });
 
                     deleteButton.addEventListener("click", function() {
@@ -79,15 +87,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function updateProgress(id, current_progress, tracking_status) {
+    async function updateProgress(id, current_progress, tracking_status, total_episodes) {
+        let nextProgress = current_progress + 1;
+        let nextStatus = tracking_status;
+
+        if (total_episodes > 0 && nextProgress >= total_episodes) {
+            nextStatus = 'Completed';
+        }
+
         try {
              const response = await fetch(`${url}/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ current_progress: current_progress + 1, 
-                        tracking_status: tracking_status })
+                    body: JSON.stringify({ 
+                        current_progress: nextProgress, 
+                        tracking_status: nextStatus 
+                    })
              });
              
         const result = await response.json();
@@ -131,17 +148,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // For the dropdown
-    document.getElementById('status-filter').addEventListener('change', popup);
+    document.getElementById('status-filter').addEventListener('change', () => {
+        const val = document.getElementById('status-filter').value;
+        chrome.storage.local.set({ lastStatus: val });
+        popup();
+    });
 
     let searchTimeout;
     // For the search box
     document.getElementById('search-input').addEventListener('input', () => {
-        console.log("Typing detected..."); // Check if event fires
-        clearTimeout(searchTimeout); 
-        searchTimeout = setTimeout(() => {
-            console.log("Timeout finished, calling popup()"); // Check if debounce works
-            popup();
-        }, 300);
+        const val = document.getElementById('search-input').value;
+        chrome.storage.local.set({ lastSearch: val });
+        
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(popup, 300);
     });
 
     const addBtn = document.getElementById('add-new-btn');

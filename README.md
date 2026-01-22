@@ -8,17 +8,20 @@ A full-stack tracking application for Anime, Manga, and Novels, featuring a cust
 - **Performance Optimized:** Frontend debouncing (300ms) to reduce server load and SQL connection pooling for efficient data persistence.
 - **Safety First:** Server-side validation and frontend confirmation modals for destructive actions.
 
-## 🛠 Tech Stack
-- **Backend:** Node.js, Express, TypeScript (Strict Mode)
-- **Database:** PostgreSQL (Relation schema with check constraints)
-- **Frontend:** Chrome Extension (Manifest V3, Vanilla JS, CSS3)
-- **Tools:** DBeaver, Thunder Client, Gitss.
+## Architectural Highlights
 
-## Roadmap
-- [X] **Week 2, Day 4:** Implement a "Search & Filter" bar within the Chrome Extension.
-- [X] **Week 2, Day 5:** Add "Delete" functionality with a confirmation modal.
-- [X] **Future:** User Authentication (BCrypt/JWT) to allow multiple users.
-- [X] **Future:** Syncing with external APIs (MyAnimeList/AniList) to auto-fill metadata.
+- **Manifest V3 Browser Integration:** Engineered a custom Chrome Extension frontend to allow seamless data entry and tracking without leaving the active browser tab.
+- **Dynamic Query Construction:** Developed a flexible backend filtering engine using **SQL ILIKE** and wildcards, enabling real-time, case-insensitive title searches.
+- **Traffic Optimization:** Implemented a **300ms debounce** on frontend inputs, reducing redundant API overhead and server-side processing by ensuring queries only fire upon input pauses.
+- **Relational Data Integrity:** Utilized PostgreSQL check constraints and strict TypeScript interfaces to maintain data consistency across the full CRUD lifecycle.
+- **State Persistence:** Integrated `chrome.storage.local` to maintain user filter and search states across browser sessions.
+
+## Tech Stack
+
+- **Backend:** Node.js, Express, TypeScript (Strict Mode)
+- **Database:** PostgreSQL (with Connection Pooling)
+- **Frontend:** Chrome Extension API (Vanilla JS, CSS3, HTML5)
+- **Tooling:** DBeaver (Database Design), Git (Version Control)
 
 ## Project Structure
 
@@ -53,10 +56,19 @@ The `media_items` table stores the core data for the tracker:
 * PostgreSQL
 * Postgres.app (for Mac users)
 
+### Roadmap & Evolution
+[x] v1.0 Core: Full CRUD lifecycle implementation and SQL-backed search.
+[X] v1.1 UX: Modal-driven entry forms and auto-focus logic.
+[ ] v2.0 Security: User Authentication via JWT/BCrypt.
+[ ] v2.1 Integration: Metadata auto-sync with external APIs (MyAnimeList/AniList).
+
 ### Setup
-1. **Install dependencies:** `npm install`
-2. **Environment Variables:** Create a `.env` file in the backend folder and add:
-   - `PORT=5001`
-   - `DATABASE_URL=postgres://yourname@localhost:5432/media_tracker`
-3. **Database Initialization:** Run the schema found in the database scripts (coming soon) in DBeaver.
-4. **Start Development Server:** `npm run dev`
+1. **Database:** Initialize the schema found in backend/database/schema.sql within your PostgreSQL instance.
+2. **Backend:**
+   - cd backend && npm install
+   - Configure .env with your DATABASE_URL and PORT.
+   - npm run dev to start the TypeScript development server.
+3. **Extension:**
+   - Navigate to chrome://extensions/
+   - Enable Developer Mode.
+   - Select Load Unpacked and point to the /extension directory.

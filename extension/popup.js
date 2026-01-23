@@ -103,7 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     body: JSON.stringify({ 
                         current_progress: nextProgress, 
-                        tracking_status: nextStatus 
+                        tracking_status: nextStatus,
+                        total_episodes: total_episodes
                     })
              });
              
@@ -187,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tracking_status: document.getElementById('new-status').value,
             current_progress: parseInt(document.getElementById('new-progress').value) || 0,
             total_episodes: parseInt(document.getElementById('new-total').value) || 0,
-            rating: parseInt(document.getElementById('new-rating').value) || 0
+            rating: parseFloat(document.getElementById('new-rating').value) || 0
         };
 
         try {

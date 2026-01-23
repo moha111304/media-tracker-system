@@ -105,40 +105,78 @@ app.get('/hello/:name', async (req: Request, res: Response) => {
 
 app.post('/media', async (req: Request, res: Response) => {
   try{
+    const total_episodes = req.body.total_episodes || 0;
+
     const { title, media_type, tracking_status, current_progress, rating } = req.body;
 
+    // Trimmed version to use for validation AND SQL query
+    const trimmedTitle = title ? title.trim() : "";
+
     // Validation For Inputs
-    if (!title || title.trim() === "") {
-      return res.status(400).json({ error: "Title is required" });
+    if (trimmedTitle === "") {
+      return res.status(400).json({ 
+        error: "Validation Error", 
+        message: "Title is required" 
+      });
     }
 
     if (!media_type || !ALLOWED_MEDIA_TYPES.includes(media_type)) {
       return res.status(400).json({ 
-        error: `Invalid or missing media type. Must be one of: ${ALLOWED_MEDIA_TYPES.join(', ')}` 
+        error: "Validation Error",
+        message:`Invalid or missing media type. Must be one of: ${ALLOWED_MEDIA_TYPES.join(', ')}` 
       });
     }
 
     if (!tracking_status || !ALLOWED_STATUSES.includes(tracking_status)) {
       return res.status(400).json({ 
-        error: `Invalid or missing status. Must be one of: ${ALLOWED_STATUSES.join(', ')}` 
+        error: "Validation Error",
+        message:`Invalid or missing status. Must be one of: ${ALLOWED_STATUSES.join(', ')}` 
       });
     }
 
     if (current_progress < 0) {
-      return res.status(400).json({ error: "Progress cannot be negative" });
+      return res.status(400).json({ 
+        error:"Validation Error",
+        message: "Progress cannot be negative" 
+      }) ;
     }
 
-    if (rating !== undefined && (rating < 0 || rating > 10)) {
-      return res.status(400).json({ error: "Rating must be between 0 and 10" });
+    if (current_progress > total_episodes && total_episodes !== 0) {
+      return res.status(400).json({ 
+        error: "Validation Error", 
+        message: `Progress (${current_progress}) cannot exceed total episodes (${total_episodes}).` 
+      });
     }
+
+    if (rating !== null && (rating < 0 || rating > 10)) {
+      return res.status(400).json({ 
+        error: "Validation Error",
+        message: "Rating must be between 0 and 10" 
+      });
+    }
+
+    let finalStatus = tracking_status;
+    let finalProgress = current_progress;
+
+    // If progress meets or exceeds total, force "Completed"
+    if (total_episodes > 0 && finalProgress >= total_episodes) {
+        finalStatus = 'Completed';
+        finalProgress = total_episodes; // Caps progress at the max
+    }
+
+    // If user manually selects "Completed", ensure progress is maxed out
+    if (finalStatus === 'Completed' && total_episodes > 0) {
+        finalProgress = total_episodes;
+    }
+
 
     const sql = `
-      INSERT INTO media_items (title, media_type, tracking_status, current_progress, rating)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO media_items (title, media_type, tracking_status, current_progress, total_episodes, rating)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
     `;
 
-    const result = await pool.query(sql, [title, media_type, tracking_status, current_progress, rating]);
+    const result = await pool.query(sql, [trimmedTitle, media_type, finalStatus, finalProgress, total_episodes, rating]);
     
     res.status(201).json(result.rows[0]);
 
@@ -178,27 +216,53 @@ app.delete('/media/:id', async (req: Request, res: Response) => {
 app.put('/media/:id', async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const { tracking_status, current_progress,  } = req.body;
+    const total_episodes = req.body.total_episodes || 0;
+    const { tracking_status, current_progress } = req.body;
     
     // Validation For Updates
     if (tracking_status && !ALLOWED_STATUSES.includes(tracking_status)) {
       return res.status(400).json({ 
-        error: `Invalid status. Must be one of: ${ALLOWED_STATUSES.join(', ')}` 
+        error: "Validation Error",
+        message: `Invalid status. Must be one of: ${ALLOWED_STATUSES.join(', ')}` 
       });
     }
 
     if (current_progress < 0) {
-      return res.status(400).json({ error: "Progress cannot be negative" });
+      return res.status(400).json({ 
+        error: "Validation Error",
+        message: "Progress cannot be negative" 
+      });
+    }
+
+    if (current_progress > total_episodes && total_episodes !== 0) {
+      return res.status(400).json({ 
+        error: "Validation Error", 
+        message: `Progress (${current_progress}) cannot exceed total episodes (${total_episodes}).` 
+      });
+    }
+
+    let finalStatus = tracking_status;
+    let finalProgress = current_progress;
+
+    // If progress meets or exceeds total, force "Completed"
+    if (total_episodes > 0 && finalProgress >= total_episodes) {
+        finalStatus = 'Completed';
+        finalProgress = total_episodes; // Caps progress at the max
+    }
+
+    // If user manually selects "Completed", ensure progress is maxed out
+    if (finalStatus === 'Completed' && total_episodes > 0) {
+        finalProgress = total_episodes;
     }
 
     const sql = `
       UPDATE media_items 
-      SET tracking_status = $1, current_progress = $2
-      WHERE id = $3 
+      SET tracking_status = $1, current_progress = $2, total_episodes = $3
+      WHERE id = $4 
       RETURNING *;
     `;
 
-    const result = await pool.query(sql, [tracking_status, current_progress, id]);
+    const result = await pool.query(sql, [finalStatus, finalProgress, total_episodes, id]);
 
     if (result.rowCount === 0) {
       res.status(404).json({ status: "error", message: "Not Found"});
@@ -213,5 +277,5 @@ app.put('/media/:id', async (req: Request, res: Response) => {
 })
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

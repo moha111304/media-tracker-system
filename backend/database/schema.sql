@@ -5,6 +5,6 @@ CREATE TABLE media_items (
     tracking_status VARCHAR(50) DEFAULT 'Plan to Watch', -- Current progress
     current_progress INT DEFAULT 0,  -- Episode or Chapter number
     total_episodes INT,              -- Optional: Total count
-    rating INT CHECK (rating >= 0 AND rating <= 10), -- 1-10 scale
+    rating NUMERIC(3,1) CHECK (rating >= 0 AND rating <= 10.0), -- 1-10 scale
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -24,27 +24,6 @@ app.use(express.json()); // Allows the server to read JSON data
 
 // GET (Read) Routes
 
-// First "Route"
-app.get('/ping', (req: Request, res: Response) => {
-  res.json({ status: "success", message: "Media Tracker API is online!" });
-});
-
-// New Test Route for the Database
-app.get('/test-db', async (req: Request, res: Response) => {
-  try {
-    // This asks the database for the current time
-    const result = await pool.query('SELECT NOW()');
-    res.json({ 
-      status: "success", 
-      message: "Database is connected!", 
-      time: result.rows[0].now 
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ status: "error", message: "Database connection failed" });
-  }
-});
-
 // Route to get all media items from the database
 app.get('/media', async (req: Request, res: Response) => {
   try {
@@ -84,20 +63,6 @@ app.get('/media', async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch media items" });
-  }
-});
-
-app.get('/hello/:name', async (req: Request, res: Response) => {
-  try {
-    const name = req.params.name;
-    res.json({
-      status: "success",
-      message: `Hello, ${name}!`
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 });
 
@@ -271,7 +236,7 @@ app.put('/media/:id', async (req: Request, res: Response) => {
     }
 
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).json({ status: "error", message: "Internal Server Error"})
   }
 })

@@ -1,3 +1,4 @@
+import path from 'path';
 import pool from './db';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
@@ -20,7 +21,7 @@ const ALLOWED_STATUSES = [
 // Middleware (Like Java Filters)
 app.use(cors()); // Allows your extension/frontend to talk to the server
 app.use(express.json()); // Allows the server to read JSON data
-
+app.use(express.static(path.join(__dirname, '..', '..', 'frontend')));
 
 // --- MEDIA SECTION ---
 
@@ -267,7 +268,7 @@ app.get('/user/profile', (req: Request, res: Response) => {
   // TODO: Extract user ID from JWT token
   res.json({ 
     status: "success", 
-    data: { username: "Ayulon", email: "student@umn.edu" } 
+    data: { username: "Random", email: "student@umn.edu" } 
   });
 });
 
@@ -276,11 +277,7 @@ app.get('/user/profile', (req: Request, res: Response) => {
 
 // GET: Landing page or API root
 app.get('/', (req: Request, res: Response) => {
-  res.json({ 
-    status: "success", 
-    message: "Welcome to the Media Tracker API v1.0",
-    documentation: "https://github.com/your-repo-link"
-  });
+  res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'index.html'));
 });
 
 // GET: Aggregated stats for the dashboard

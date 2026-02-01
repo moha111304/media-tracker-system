@@ -21,7 +21,8 @@ const ALLOWED_STATUSES = [
 // Middleware (Like Java Filters)
 app.use(cors()); // Allows your extension/frontend to talk to the server
 app.use(express.json()); // Allows the server to read JSON data
-app.use(express.static(path.join(__dirname, '..', '..', 'frontend')));
+app.use(express.static(path.join(__dirname, '..', '..', 'frontend', 'html')));
+app.use(express.static(path.join(__dirname, '..', '..', 'frontend', 'css')));
 
 // --- MEDIA SECTION ---
 
@@ -277,7 +278,11 @@ app.get('/user/profile', (req: Request, res: Response) => {
 
 // GET: Landing page or API root
 app.get('/', (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'html', 'index.html'));
+});
+
+app.get('/tracker', (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'html', 'tracker.html'));
 });
 
 // GET: Aggregated stats for the dashboard

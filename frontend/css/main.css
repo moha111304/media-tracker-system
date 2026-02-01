@@ -1,0 +1,79 @@
+/* Global Variables */
+:root {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --accent-color: #03dac6;
+    --border-color: #333;
+}
+
+body { 
+    font-family: 'Segoe UI', sans-serif; 
+    background-color: var(--bg-color); 
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+}
+
+/* Gallery Grid */
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 25px;
+    padding: 20px 0;
+}
+
+.media-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s;
+    cursor: pointer;
+    aspect-ratio: 2 / 3;
+    position: relative;
+    border: 1px solid var(--border-color);
+}
+
+.media-card:hover { transform: scale(1.05); border-color: var(--accent-color); }
+
+/* Layout & Hero */
+.container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+header { padding: 20px 0; border-bottom: 1px solid var(--border-color); }
+nav { display: flex; justify-content: space-between; align-items: center; }
+
+.hero { text-align: center; padding: 80px 0; }
+.hero h1 { font-size: 3rem; color: var(--accent-color); margin-bottom: 10px; }
+.hero p { font-size: 1.2rem; color: #aaa; max-width: 600px; margin: 0 auto 30px; }
+
+/* Buttons */
+.btn-main, .btn-accent {
+    background-color: var(--accent-color);
+    color: #121212;
+    padding: 12px 24px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+.btn-outline {
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 12px 24px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+/* Features Section */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+.feature-card {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}

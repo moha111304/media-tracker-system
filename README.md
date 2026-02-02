@@ -20,7 +20,8 @@ A full-stack tracking application for Anime, Manga, and Novels, featuring a cust
 
 - **Backend:** Node.js, Express, TypeScript (Strict Mode)
 - **Database:** PostgreSQL (with Connection Pooling)
-- **Frontend:** Chrome Extension API (Vanilla JS, CSS3, HTML5)
+- **Frontend**: Responsive HTML5, CSS Grid gallery, and Vanilla JavaScript.
+- **Extension:** Chrome Extension API (Vanilla JS, CSS3, HTML5)
 - **Tooling:** DBeaver (Database Design), Git (Version Control)
 
 ## Project Structure
@@ -39,6 +40,9 @@ media-tracker-system/
 │   ├── manifest.json  # Extension metadata & permissions
 │   ├── popup.html     # Extension UI
 │   └── popup.js       # API Fetching & DOM Rendering
+├── frontend/          # Static assets
+│   ├── css/           # Global styles and responsive design
+│   └── html/          # Core page structures (index, tracker, login)
 ├── README.md          # Project documentation
 └── .gitignore         # Safety filter for GitHub
 ```

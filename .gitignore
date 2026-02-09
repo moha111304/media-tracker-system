@@ -1,4 +1,13 @@
+# Dependencies
 node_modules/
+
+# Environment Variables
 .env
-.DS_Store
+
+# Build files
 dist/
+out/
+
+# OS files
+.DS_Store
+Thumbs.db

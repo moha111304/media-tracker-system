@@ -77,3 +77,65 @@ nav { display: flex; justify-content: space-between; align-items: center; }
     border-radius: 8px;
     border: 1px solid var(--border-color);
 }
+
+/* --- Analytics & Stats Cards --- */
+#stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-color);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    margin: 0.5rem 0;
+}
+
+/* --- Form Styling (Login/Signup) --- */
+.auth-container {
+    max-width: 400px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: var(--card-bg);
+    border-radius: 8px;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.8rem;
+    background: #121212;
+    border: 1px solid #333;
+    color: white;
+    border-radius: 4px;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}

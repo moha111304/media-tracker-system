@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Tracker | User Management</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">ADMIN <span style="font-weight: 300;">| Users</span></div>
+            <div>
+                <a href="/admin/dashboard.html" class="nav-link">Dashboard</a>
+                <a href="/admin/manage-db.html" class="nav-link">Database</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>User Accounts</h1>
+            <p>Monitor active sessions and manage user permissions across the system.</p>
+        </section>
+
+        <div id="stats-grid">
+            <div class="stat-card">
+                <h3>Active Users</h3>
+                <p class="stat-number">1</p>
+                <p style="font-size: 0.8rem; color: #4caf50;">● System Online</p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Registrations</h3>
+                <p class="stat-number">1</p>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Since Feb 2026</p>
+            </div>
+        </div>
+
+        <div class="feature-card" style="margin-top: 30px;">
+            <h3>Account Directory</h3>
+            <div style="overflow-x: auto; margin-top: 20px;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead style="border-bottom: 2px solid #333;">
+                        <tr>
+                            <th style="padding: 12px;">Username</th>
+                            <th style="padding: 12px;">Role</th>
+                            <th style="padding: 12px;">Last Login</th>
+                            <th style="padding: 12px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 12px;">MOHA1660</td>
+                            <td style="padding: 12px;"><span style="color: var(--accent-color);">Super Admin</span></td>
+                            <td style="padding: 12px;">2026-02-18</td>
+                            <td style="padding: 12px;">
+                                <button class="btn-main" style="padding: 5px 10px; font-size: 0.8rem;">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer class="container" style="text-align: center; margin-top: 50px; opacity: 0.6;">
+        <p>Security Module | Restricted Access</p>
+    </footer>
+</body>
+</html>

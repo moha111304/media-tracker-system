@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Tracker | Create Account</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">MediaTracker</div>
+            <a href="login.html" class="nav-link">Already have an account? Login</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="auth-container">
+            <h1>Join Media Tracker</h1>
+            <p style="margin-bottom: 2rem; color: var(--text-muted);">Start tracking your anime, manga, and more.</p>
+            
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="form-input" placeholder="e.g. Ayulon" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" class="form-input" placeholder="name@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" class="form-input" placeholder="••••••••" required>
+                </div>
+                
+                <button type="submit" class="btn-main" style="width: 100%; margin-top: 1rem;">Create Account</button>
+            </form>
+
+            <p style="margin-top: 1.5rem; font-size: 0.9rem; text-align: center;">
+                By signing up, you agree to our <a href="#" style="color: var(--accent-color);">Terms of Service</a>.
+            </p>
+        </section>
+    </main>
+
+    <footer class="container" style="text-align: center; margin-top: 50px; opacity: 0.6;">
+        <p>&copy; 2026 Media Tracker System</p>
+    </footer>
+</body>
+</html>

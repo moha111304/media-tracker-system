@@ -139,3 +139,10 @@ nav { display: flex; justify-content: space-between; align-items: center; }
     outline: none;
     border-color: var(--accent-color);
 }
+
+/* Navigation Active State */
+.nav-link.active-link {
+    color: var(--accent-color) !important;
+    border-bottom: 2px solid var(--accent-color);
+    font-weight: bold;
+}

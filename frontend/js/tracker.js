@@ -1,44 +1,47 @@
 /**
- * Tracker Controller
- * Handles media gallery rendering, searching, and category filtering.
+ * Tracker Data Orchestrator
+ * Connects the API service to the UI Renderer.
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-    const searchInput = document.getElementById('media-search');
-    const filterSelect = document.getElementById('media-filter');
+document.addEventListener('DOMContentLoaded', async () => {
     const galleryGrid = document.getElementById('gallery-grid');
+    const filterSelect = document.getElementById('media-filter');
 
-    // 1. Mock Filter Logic
-    // Wwill eventually filter data fetched from GET /api/media
-    const handleFilter = () => {
-        const searchTerm = searchInput?.value.toLowerCase();
-        const filterType = filterSelect?.value;
+    /**
+     * Main function to fetch and display media
+     */
+    const loadMediaEntries = async (filter = 'All') => {
+        try {
+            console.log(`Fetching ${filter} media...`);
+            
+            // 1. Fetch data from our API Service
+            // Endpoint matches your Express router logic
+            const mediaData = await api.get('/media');
 
-        console.log(`Filtering for: "${searchTerm}" in category: ${filterType}`);
-        
+            // 2. Filter data based on UI selection
+            const filteredData = filter === 'All' 
+                ? mediaData 
+                : mediaData.filter(item => item.media_type === filter);
+
+            // 3. Pass the data to the Renderer to update the DOM
+            Renderer.renderGallery('gallery-grid', filteredData);
+
+        } catch (error) {
+            console.error("Failed to load media:", error);
+            if (galleryGrid) {
+                galleryGrid.innerHTML = `
+                    <p class="error">Unable to load your collection. 
+                    Check if the backend server is running on port 5001.</p>
+                `;
+            }
+        }
     };
 
-    // 2. Event Listeners
-    if (searchInput) {
-        searchInput.addEventListener('input', handleFilter);
-    }
+    // Listen for category changes (Anime, Manga, etc.)
+    filterSelect?.addEventListener('change', (e) => {
+        loadMediaEntries(e.target.value);
+    });
 
-    if (filterSelect) {
-        filterSelect.addEventListener('change', handleFilter);
-    }
-
-    console.log("Tracker Gallery Logic Initialized.");
+    // Initial load on page visit
+    await loadMediaEntries();
 });
-
-// Helper function to create a Media Card (for v2.1)
-const createMediaCard = (item) => {
-    return `
-        <div class="media-card">
-            <img src="${item.image_url}" alt="${item.title}">
-            <div class="media-info">
-                <h4>${item.title}</h4>
-                <p>${item.current_progress} / ${item.total_episodes}</p>
-            </div>
-        </div>
-    `;
-};

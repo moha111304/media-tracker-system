@@ -1,47 +1,47 @@
 /**
- * Tracker Data Orchestrator
- * Connects the API service to the UI Renderer.
+ * Tracker Data Orchestrator - COMPLETED
+ * Connects the API service to the UI Renderer with real-time filtering.
  */
 
-document.addEventListener('DOMContentLoaded', async () => {
+let allMedia = []; // Local cache to allow instant filtering without API calls
+
+const loadMediaEntries = async () => {
     const galleryGrid = document.getElementById('gallery-grid');
-    const filterSelect = document.getElementById('media-filter');
+    try {
+        // 1. Fetch data from PostgreSQL via our API Service
+        allMedia = await api.get('/media');
+        
+        // 2. Initial render
+        renderState();
+    } catch (error) {
+        console.error("Failed to load media:", error);
+        galleryGrid.innerHTML = `<p class="error">Server Connection Failed. Check Backend.</p>`;
+    }
+};
 
-    /**
-     * Main function to fetch and display media
-     */
-    const loadMediaEntries = async (filter = 'All') => {
-        try {
-            console.log(`Fetching ${filter} media...`);
-            
-            // 1. Fetch data from our API Service
-            // Endpoint matches your Express router logic
-            const mediaData = await api.get('/media');
+/**
+ * Filter Logic - Combines Search + Category
+ */
+const renderState = () => {
+    const searchTerm = document.getElementById('media-search')?.value.toLowerCase() || "";
+    const categoryFilter = document.getElementById('media-filter')?.value || "All";
 
-            // 2. Filter data based on UI selection
-            const filteredData = filter === 'All' 
-                ? mediaData 
-                : mediaData.filter(item => item.media_type === filter);
-
-            // 3. Pass the data to the Renderer to update the DOM
-            Renderer.renderGallery('gallery-grid', filteredData);
-
-        } catch (error) {
-            console.error("Failed to load media:", error);
-            if (galleryGrid) {
-                galleryGrid.innerHTML = `
-                    <p class="error">Unable to load your collection. 
-                    Check if the backend server is running on port 5001.</p>
-                `;
-            }
-        }
-    };
-
-    // Listen for category changes (Anime, Manga, etc.)
-    filterSelect?.addEventListener('change', (e) => {
-        loadMediaEntries(e.target.value);
+    const filtered = allMedia.filter(item => {
+        const matchesSearch = item.title.toLowerCase().includes(searchTerm);
+        const matchesCategory = categoryFilter === "All" || item.media_type === categoryFilter;
+        return matchesSearch && matchesCategory;
     });
 
-    // Initial load on page visit
-    await loadMediaEntries();
+    Renderer.renderGallery('gallery-grid', filtered);
+};
+
+// Event Listeners for Real-time UX
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('media-search');
+    const filterSelect = document.getElementById('media-filter');
+
+    searchInput?.addEventListener('input', renderState);
+    filterSelect?.addEventListener('change', renderState);
+
+    loadMediaEntries();
 });

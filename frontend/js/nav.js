@@ -1,51 +1,40 @@
 /**
- * Global Navigation System v2.0
- * Manages UI states, active links, and role-based access.
+ * Global Navigation Controller
+ * Handles active link states and global logout functionality.
  */
 
-const initNavigation = () => {
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Highlight Active Page
     const currentPath = window.location.pathname;
     const navLinks = document.querySelectorAll('.nav-link');
 
-    // 1. Handle Active Link Styling
     navLinks.forEach(link => {
-        const href = link.getAttribute('href');
-        
-        // Remove existing active classes
-        link.classList.remove('active-link');
-
-        // Check if the current URL matches the link's destination
-        if (currentPath === href || (currentPath === '/' && href === 'index.html')) {
-            link.classList.add('active-link');
+        if (link.getAttribute('href') === currentPath || 
+           (currentPath === '/' && link.getAttribute('href') === '/index.html')) {
+            link.classList.add('active-nav');
         }
     });
 
-    // 2. Mock Authentication Check
-    // In v2.1, this will check localStorage for a JWT
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const userRole = localStorage.getItem('userRole') || 'guest';
-
-    updateNavForUser(isLoggedIn, userRole);
-};
-
-// 3. Dynamic UI Updates based on User Status
-const updateNavForUser = (isLoggedIn, role) => {
-    const authLinks = document.getElementById('auth-links');
-    if (!authLinks) return;
-
-    if (isLoggedIn) {
-        let adminLink = role === 'admin' ? '<a href="/admin/dashboard.html" class="nav-link">Admin</a>' : '';
-        authLinks.innerHTML = `
-            ${adminLink}
-            <a href="/profile.html" class="nav-link">Profile</a>
-            <button id="logout-btn" class="nav-link" style="background:none; border:none; cursor:pointer;">Logout</button>
-        `;
-        
-        document.getElementById('logout-btn')?.addEventListener('click', () => {
-            localStorage.clear();
-            window.location.href = '/login.html';
+    // 2. Global Logout Handler
+    const logoutBtn = document.getElementById('global-logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm("Are you sure you want to log out?")) {
+                // Clear all session data
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('username');
+                
+                // Redirect to landing page
+                window.location.href = '/index.html';
+            }
         });
     }
-};
 
-document.addEventListener('DOMContentLoaded', initNavigation);
+    // 3. Admin UI Protection (Hide Admin link for regular users)
+    const adminLink = document.getElementById('nav-admin-link');
+    if (adminLink && localStorage.getItem('userRole') !== 'admin') {
+        adminLink.style.display = 'none';
+    }
+});

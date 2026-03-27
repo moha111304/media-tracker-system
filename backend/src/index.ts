@@ -154,7 +154,7 @@ app.put('/media/:id', async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const total_episodes = req.body.total_episodes || 0;
-    const { tracking_status, current_progress } = req.body;
+    const { tracking_status, current_progress, media_type } = req.body;
     
     // Validation For Updates
     if (tracking_status && !ALLOWED_STATUSES.includes(tracking_status)) {
@@ -182,10 +182,15 @@ app.put('/media/:id', async (req: Request, res: Response) => {
     let finalProgress = current_progress;
 
     // If progress meets or exceeds total, force "Completed"
-    if (total_episodes > 0 && finalProgress >= total_episodes) {
-        finalStatus = 'Completed';
-        finalProgress = total_episodes; // Caps progress at the max
-    }
+    if (total_episodes > 0) {
+      if (finalProgress >= total_episodes) {
+          finalStatus = 'Completed';
+          finalProgress = total_episodes;
+      } else if (finalStatus === 'Completed' && finalProgress < total_episodes) {
+          // If they were 'Completed' but lowered progress, move them back to 'Watching' or 'Reading'
+          finalStatus = (media_type === 'Manga' || media_type === 'Manhwa') ? 'Reading' : 'Watching';
+      }
+  }
 
     // If user manually selects "Completed", ensure progress is maxed out
     if (finalStatus === 'Completed' && total_episodes > 0) {

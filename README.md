@@ -23,6 +23,7 @@ A full-stack tracking application for Anime, Manga, and Novels, featuring a cust
 - **Frontend**: Responsive HTML5, CSS Grid gallery, and Vanilla JavaScript.
 - **Extension:** Chrome Extension API (Vanilla JS, CSS3, HTML5)
 - **Tooling:** DBeaver (Database Design), Git (Version Control)
+- **Security:** Middleware-based Authorization (JWT/BCrypt Roadmap)
 
 ## Project Structure
 
@@ -31,6 +32,9 @@ media-tracker-system/
 ├── backend/
 |   ├── database
 │   │   └── schema.sql # Core Data Model
+│   ├── controllers/   # mediaController.ts (Logic & SQL)
+│   ├── middleware/    # authMiddleware.ts (Security Bouncer)
+│   ├── routes/        # mediaRoutes.ts (API Endpoints)
 │   ├── src/
 │   │   ├── index.ts   # Entry point & API routes
 │   │   └── db.ts      # Database connection & pooling
@@ -42,7 +46,9 @@ media-tracker-system/
 │   └── popup.js       # API Fetching & DOM Rendering
 ├── frontend/          # Static assets
 │   ├── css/           # Global styles and responsive design
-│   └── html/          # Core page structures (index, tracker, login)
+│   ├── html/          # Core page structures (index, tracker, login)
+│   ├── js/      
+│   └── ts/ 
 ├── README.md          # Project documentation
 └── .gitignore         # Safety filter for GitHub
 ```
